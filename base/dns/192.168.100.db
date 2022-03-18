@@ -1,0 +1,12 @@
+$TTL	86400
+@	IN	SOA	a1.vt. root.vt. (
+			3; dns update time for new zone
+			3600; refresh to new update
+			1800; retry time for error
+			604800; expire time after remove record from system
+			86400; minimun TTL
+)
+@	IN	NS	a1.vt.
+100	IN	PTR	a1.vt.
+101	IN	PTR	a2.vt.
+102	IN	PTR	a3.vt.
