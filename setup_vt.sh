@@ -18,6 +18,6 @@ fi
 
 echo "rsync base"
 rsync -au "$lc_base" "$vt":~/. --delete
-scp "env-$vt.sh" "$vt":"$vt_base"/env.sh
+scp "env/$vt.sh" "$vt":"$vt_base"/env.sh
 echo "run $com"
 ssh "$vt" "cd $vt_base/$com && bash setup.sh $ext"
