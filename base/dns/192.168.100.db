@@ -10,3 +10,6 @@ $TTL	86400
 100	IN	PTR	a1.vt.
 101	IN	PTR	a2.vt.
 102	IN	PTR	a3.vt.
+103	IN	PTR	a4.vt.
+104	IN	PTR	a5.vt.
+109	IN	PTR	virtip.vt.
