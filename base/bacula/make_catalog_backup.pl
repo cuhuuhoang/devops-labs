@@ -1,4 +1,8 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
+#
+# Author: Eric Bollengier, Copyright, 2006-2017
+# License: BSD 2-Clause; see file LICENSE-FOSS
+
 use strict;
 
 =head1 SCRIPT
@@ -8,40 +12,21 @@ use strict;
 
 =head1 USAGE
 
-    make_catalog_backup.pl MyCatalog
+    make_catalog_backup.pl [-m] MyCatalog
 
 =head1 LICENSE
-
-   Bacula® - The Network Backup Solution
-
-   Copyright (C) 2000-2010 Free Software Foundation Europe e.V.
-
-   The main author of Bacula is Kern Sibbald, with contributions from
-   many others, a complete list can be found in the file AUTHORS.
-
-   This program is Free Software; you can redistribute it and/or
-   modify it under the terms of version three of the GNU Affero General Public
-   License as published by the Free Software Foundation plus additions
-   that are listed in the file LICENSE.
-
-   This program is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU Affero General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-   02110-1301, USA.
-
-   Bacula® is a registered trademark of Kern Sibbald.
-   The licensor of Bacula is the Free Software Foundation Europe
-   (FSFE), Fiduciary Program, Sumatrastrasse 25, 8006 Zurich,
-   Switzerland, email:ftf@fsfeurope.org.
-
+   Author: Eric Bollengier, 2010
+   License: BSD 2-Clause; see file LICENSE-FOSS
 =cut
 
-my $cat = shift or die "Usage: $0 catalogname";
+my $cat = shift or die "Usage: $0 [-m] catalogname";
+my $mode = "dump";
+
+if ($cat eq '-m') {
+    $mode = "analyse";
+    $cat = shift or die "Usage: $0 [-m] catalogname";
+}
+
 my $dir_conf='/usr/sbin/dbcheck -B -c /etc/bacula/bacula-dir.conf';
 my $wd = "/var/spool/bacula";
 
@@ -55,9 +40,10 @@ sub dump_sqlite3
 }
 
 # TODO: use just ENV and drop the pg_service.conf file
-sub dump_pgsql
+sub setup_env_pgsql
 {
     my %args = @_;
+    my $username = getpwuid $ENV{'UID'}; 
     umask(0077);
 
     if ($args{db_address}) {
@@ -76,12 +62,32 @@ sub dump_pgsql
         $ENV{PGPASSWORD}=$args{db_password};
     }
     $ENV{PGDATABASE}=$args{db_name};
+    system("echo '\\q' | HOME='$wd' psql") == 0 or die "$username doesn't have access to the catalog database\n";
+}
+
+sub dump_pgsql
+{
+    my %args = @_;
+    setup_env_pgsql(%args);
     exec("HOME='$wd' pg_dump -c > '$wd/$args{db_name}.sql'");
     print "Error while executing postgres dump $!\n";
     return 1;               # in case of error
 }
 
-sub dump_mysql
+sub analyse_pgsql
+{
+    my %args = @_;
+    setup_env_pgsql(%args);
+    my @output =`LANG=C HOME='$wd' vacuumdb -z 2>&1`;
+    my $exitcode = $? >> 8;
+    print grep { !/^WARNING:\s+skipping\s\"(pg_|sql_)/ } @output;
+    if ($exitcode != 0) {
+        print "Error while executing postgres analyse. Exitcode=$exitcode\n";
+    }
+    return $exitcode;
+}
+
+sub setup_env_mysql
 {
     my %args = @_;
     umask(0077);
@@ -92,37 +98,64 @@ sub dump_mysql
     $args{db_address} = $args{db_address} || "localhost";
     my $addr = "host=$args{db_address}";
     if ($args{db_socket}) {     # unix socket is fastest than net socket
-        $addr = "socket=$args{db_socket}";
+        $addr = "socket=\"$args{db_socket}\"";
     }
-
-    print MY "[client]
+    my $mode = $args{mode} || 'client';
+    print MY "[$mode]
 $addr
-user=$args{db_user}
-password=$args{db_password}
+user=\"$args{db_user}\"
+password=\"$args{db_password}\"
 ";
     if ($args{db_port}) {
-        print MY "port=$args{db_port}\n";
+       print MY "port=$args{db_port}\n";
     }
-    
     close(MY);
+}
 
+sub dump_mysql
+{
+    my %args = @_;
+
+    setup_env_mysql(%args);
     exec("HOME='$wd' mysqldump -f -u$args{db_user} -p$args{db_password} --opt $args{db_name} > '$wd/$args{db_name}.sql'");
     print "Error while executing mysql dump $!\n";
     return 1;
 }
 
-sub dump_catalog
+sub analyse_mysql
 {
     my %args = @_;
+
+    $args{mode} = 'mysqlcheck';
+    setup_env_mysql(%args);
+
+    exec("HOME='$wd' mysqlcheck -a $args{db_name}");
+    print "Error while executing mysql analyse $!\n";
+    return 1;
+}
+
+sub handle_catalog
+{
+    my ($mode, %args) = @_;
     if ($args{db_type} eq 'SQLite3') {
         $ENV{PATH}="/usr/bin:$ENV{PATH}";
-        dump_sqlite3(%args);
+        if ($mode eq 'dump') {
+            dump_sqlite3(%args);
+        }
     } elsif ($args{db_type} eq 'PostgreSQL') {
         $ENV{PATH}="/usr/bin:$ENV{PATH}";
-        dump_pgsql(%args);
+        if ($mode eq 'dump') {
+            dump_pgsql(%args);
+        } else {
+            analyse_pgsql(%args);
+        }
     } elsif ($args{db_type} eq 'MySQL') {
         $ENV{PATH}="/usr/bin:$ENV{PATH}";
-        dump_mysql(%args);
+        if ($mode eq 'dump') {
+            dump_mysql(%args);
+        } else {
+            analyse_mysql(%args);
+        }
     } else {
         die "This database type isn't supported";
     }
@@ -144,7 +177,7 @@ while(my $l = <FP>)
 {
     if ($l =~ /catalog=(.+)/) {
         if (exists $cfg{catalog} and $cfg{catalog} eq $cat) {
-            exit dump_catalog(%cfg);
+            exit handle_catalog($mode, %cfg);
         }
         %cfg = ();              # reset
     }
@@ -155,7 +188,7 @@ while(my $l = <FP>)
 }
 
 if (exists $cfg{catalog} and $cfg{catalog} eq $cat) {
-    exit dump_catalog(%cfg);
+    exit handle_catalog($mode, %cfg);
 }
 
 print "Can't find your catalog ($cat) in director configuration\n";
