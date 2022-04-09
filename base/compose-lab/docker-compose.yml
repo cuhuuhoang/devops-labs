@@ -1,0 +1,64 @@
+version: "3"
+services:
+  c-httpd:
+    image: "wp-httpd"
+    container_name: c-httpd
+    restart: always
+    hostname: httpd
+    networks:
+      - www-wp
+    ports:
+      - "80:80"
+    volumes:
+      - v1:/www/wordpress
+      - v3:/www/php
+
+  c-maria:
+    image: "wp-mariadb"
+    container_name: c-mariadb
+    restart: always
+    hostname: mariadb
+    networks:
+      - www-wp
+    environment:
+      - MARIADB_ROOT_PASSWORD=abc123
+      - MARIADB_DATABASE=wordpress
+      - MARIADB_USER=wordpress_admin
+      - MARIADB_PASSWORD=pass123
+    volumes:
+      - v2:/var/lib/mysql
+
+  c-php:
+    image: "wp-php"
+    container_name: c-php
+    hostname: php
+    restart: always
+    networks:
+      - www-wp
+    volumes:
+      - v1:/www/wordpress
+      - v3:/www/php
+networks:
+  www-wp:
+    driver: bridge
+
+volumes:
+  v1:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/hoangch/code/wordpress'
+  v2:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/hoangch/code/db'
+  v3:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/hoangch/code/php'
+
