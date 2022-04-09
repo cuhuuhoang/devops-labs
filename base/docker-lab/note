@@ -1,0 +1,4 @@
+can be run on a1.vt only
+because http://wordpress.vt/ dns point there
+disable conf/extra/httpd-vhosts.conf in httpd.conf to access localhost:80
+or else access wordpress.vt
