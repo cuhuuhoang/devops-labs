@@ -29,7 +29,7 @@ define('DB_USER', 'wordpress_admin');
 define('DB_PASSWORD', 'pass123');
 
 /** Hostname của database */
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'mariadb');
 
 /** Database charset sử dụng để tạo bảng database. */
 define('DB_CHARSET', 'utf8');
