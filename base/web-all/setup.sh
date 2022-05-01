@@ -28,11 +28,11 @@ sudo mkdir -p /var/www/html/alias/1/2/3/4
 sudo cp alias /var/www/html/alias/1/2/3/4/alias
 
 echo "ssl"
-#sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout apache-selfsigned.key -out apache-selfsigned.crt
+#sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout web.key -out web.crt
 # for myhost.vt only
-sudo cp web.crt /etc/pki/tls/private/server.crt
-sudo cp web.key /etc/pki/tls/private/server.key
-sudo cp ssl.conf /etc/httpd/conf.d/ssl.conf
+#sudo cp web.crt /etc/pki/tls/private/server.crt
+#sudo cp web.key /etc/pki/tls/private/server.key
+#sudo cp ssl.conf /etc/httpd/conf.d/ssl.conf
 
 echo "restart"
 sudo systemctl restart httpd
