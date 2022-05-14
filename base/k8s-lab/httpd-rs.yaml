@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: hello-rs
+spec:
+  replicas: 2 # number of the pod
+  selector: # The pod selector determining what pods the RC is operating on
+    matchLabels:
+      app: http-rs-app # label value
+  template: # pod template
+    metadata:
+      labels:
+        app: http-rs-app # label value
+    spec:
+      containers:
+      - image: httpd # image used to run container
+        name: http-rs-app # name of the container
+        ports:
+          - containerPort: 80 # pod of the container
