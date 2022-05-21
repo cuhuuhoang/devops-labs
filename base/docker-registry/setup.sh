@@ -1,13 +1,15 @@
 #!/bin/bash
 
+host="a4.vt"
+
 sudo cp daemon.json /etc/docker/daemon.json
 sudo systemctl restart docker
-
-docker build -t node-app -f redis-consumer/Dockerfile redis-consumer
-docker tag node-app:latest a4.vt:5000/node-app
-
 docker stop registry
 docker rm registry
 docker run -d --network host --restart always --name registry registry:2
-sleep 5
-docker push a4.vt:5000/node-app
+
+for img in "hello-web" "redis-consumer"; do
+	docker build -t "$img" -f "$img"/Dockerfile "$img"
+	docker tag "$img":latest "$host":5000/"$img"
+	docker push "$host":5000/"$img"
+done

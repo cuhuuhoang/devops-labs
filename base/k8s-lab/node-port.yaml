@@ -13,7 +13,7 @@ spec:
         app: hello-kube
     spec:
       containers:
-      - image: a4.vt:5000/node-app
+      - image: a4.vt:5000/hello-web
         name: hello-kube
         ports:
           - containerPort: 3000
