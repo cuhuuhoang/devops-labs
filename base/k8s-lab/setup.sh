@@ -9,8 +9,14 @@
 #kubectl apply -f httpd-rc.yaml
 #kubectl apply -f httpd-rs.yaml
 
-kubectl label nodes a1.vt disk=ssd
-kubectl label nodes a2.vt disk=ssd
-kubectl label nodes a3.vt disk=ssd
+#kubectl label nodes a1.vt disk=ssd
+#kubectl label nodes a2.vt disk=ssd
+#kubectl label nodes a3.vt disk=ssd
 
-kubectl apply -f daemon-monitor-virt.yaml
+#kubectl apply -f daemon-monitor-virt.yaml
+
+#kubectl apply -f redis-cluster-ip.yaml
+#kubectl apply -f redis-consumer.yaml
+
+#kubectl apply -f node-port.yaml
+

@@ -1,0 +1,7 @@
+# /etc/sysconfig/crio
+
+# use "--enable-metrics" and "--metrics-port value"
+#CRIO_METRICS_OPTIONS="--enable-metrics"
+
+CRIO_NETWORK_OPTIONS="--insecure-registry=a4.vt:5000"
+#CRIO_STORAGE_OPTIONS=

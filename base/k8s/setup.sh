@@ -42,6 +42,7 @@ sudo cp 10-kubeadm.conf /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.con
 
 echo "starting"
 sudo systemctl daemon-reload
+sudo cp crio-settings /etc/sysconfig/crio
 sudo systemctl enable crio --now
 sudo systemctl enable kubelet --now
 sudo cp ip_forward /proc/sys/net/ipv4/ip_forward
