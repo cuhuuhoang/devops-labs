@@ -25,9 +25,7 @@ metadata:
   name: uweb
 spec:
   selector:
-    app: uweb
-  type: NodePort
+    app: uweb # label selectors Pod redis
   ports:
-    - port: 8080
-      targetPort: 8080
-      nodePort: 30080
+    - port: 80 # port of the serivce
+      targetPort: 8080 # port of the container that service will forward to
