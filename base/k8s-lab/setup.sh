@@ -20,3 +20,10 @@
 
 #kubectl apply -f node-port.yaml
 
+
+#deployment
+#kubectl apply -f hello-deployment.yaml
+#kubectl set image deployment hello-app hello-app=080196/hello-app:v2
+#kubectl rollout status deploy hello-app
+#kubectl rollout history deploy hello-app
+#kubectl rollout undo deployment hello-app --to-revision=2
