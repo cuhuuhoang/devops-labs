@@ -27,3 +27,12 @@
 #kubectl rollout status deploy hello-app
 #kubectl rollout history deploy hello-app
 #kubectl rollout undo deployment hello-app --to-revision=2
+
+
+#forward port
+#kubectl port-forward fortune 8080:80
+#kubectl port-forward service/uweb 8080:8080 --address='0.0.0.0'
+
+#check env
+#kubectl exec -it hello-env -- sh
+#env | grep PORT
