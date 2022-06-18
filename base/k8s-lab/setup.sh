@@ -36,3 +36,26 @@
 #check env
 #kubectl exec -it hello-env -- sh
 #env | grep PORT
+
+
+#downward
+#kubectl apply -f downward-api-env.yaml
+#kubectl exec downward main -- env
+#kubectl apply -f downward-api-volume.yaml
+#kubectl exec downward-volume -- ls -lL /etc/downward
+#kubectl exec downward-volume -- cat /etc/downward/podName
+
+#api
+#kubectl cluster-info
+#kubectl proxy
+#curl http://127.0.0.1:8001/api/v1/namespaces/default/pods
+
+#top
+#kubectl exec -it requests-pod top
+
+#metrics
+#kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+#kubectl top node
+#kubectl top pod -A
+#kubectl apply -f hpa-deploy.yaml
+#kubectl apply -f hpa.yaml
