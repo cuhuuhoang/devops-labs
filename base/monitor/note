@@ -1,0 +1,4 @@
+install monitor on a1
+add source and dashboard as in step 4
+https://jhooq.com/prometheous-grafan-setup/
+run exporter on a1,2,3
