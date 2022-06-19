@@ -1,19 +1,9 @@
 - hosts: a2
   become: True
-  pre_tasks:
-  - name: install python
-    raw: yum install python39 -y
   vars:
     download: /home/hoangch/downloads
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
-  - name: Ensure required packages are installed
-    dnf:
-      name:
-        - python39
-        - python39-devel
-        - python39-pip
-        - gcc
-      state: latest
   - name: Creates directory
     file:
       path: '{{download}}'
