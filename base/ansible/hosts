@@ -1,0 +1,2 @@
+a2 ansible_host=a2.vt ansible_port=22 ansible_user=hoangch
+a3 ansible_host=a3.vt ansible_port=22 ansible_user=hoangch

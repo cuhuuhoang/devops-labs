@@ -1,0 +1,139 @@
+- hosts: a2
+  become: True
+  pre_tasks:
+  - name: install python
+    raw: yum install python39 -y
+  vars:
+    download: /home/hoangch/downloads
+  tasks:
+  - name: Ensure required packages are installed
+    dnf:
+      name:
+        - python39
+        - python39-devel
+        - python39-pip
+        - gcc
+      state: latest
+  - name: Creates directory
+    file:
+      path: '{{download}}'
+      state: directory
+  - name: Install LAMP
+    yum:
+      name: '{{item}}'
+      state: present
+    with_items:
+    - httpd
+    - mariadb-server
+    - mariadb
+    - php
+    - php-mysqlnd
+    - php-fpm
+    - tar
+  - name: Install Required pip modules
+    pip:
+      name:
+       - PyMySQL
+       - firewall
+      state: present
+      executable: pip3
+
+  - name: Ensure service enabled and started
+    service:
+      name: '{{item}}'
+      state: started
+      enabled: True
+    with_items:
+    - mariadb
+    - httpd
+
+  - name: Install php-gd,rsync
+    yum:
+      name: '{{item}}'
+      state: present
+    with_items:
+    - php-gd
+    - rsync
+  - name: Restart httpd
+    service:
+      name: httpd
+      state: restarted
+  - name: Down wordpress
+    get_url:
+      url: http://wordpress.org/wordpress-5.3.2.tar.gz
+      dest: '{{download}}'
+  - name: extract wordpress
+    unarchive:
+      src: "{{download}}/wordpress-5.3.2.tar.gz"
+      dest: "{{download}}"
+      remote_src: yes
+  - name: rsync wordpress
+    shell: rsync -avP "{{download}}/wordpress/" /var/www/html/
+  - name: Create folder uploads
+    shell: mkdir -p /var/www/html/wp-content/uploads
+  - name: Set user:group
+    shell: chown -R apache:apache /var/www/html/*
+  - name: disable firewall
+    shell: systemctl stop firewalld
+  - name: disable firewall
+    shell: systemctl disable firewalld
+  - name: Create database wordpress
+    mysql_db:
+      name: wordpress
+      state: present
+  - name: Create user wordpressuser
+    mysql_user:
+      name: wordpressuser
+      host: localhost
+      password: wordpresspassword
+      priv: 'wordpress.*:ALL'
+      state: present
+
+  - name: Backup file config wp
+    shell: cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+  - name: Config db name
+    replace:
+      path: /var/www/html/wp-config.php
+      regexp: 'database_name_here'
+      replace: 'wordpress'
+  - name: Config username
+    replace:
+      path: /var/www/html/wp-config.php
+      regexp: 'username_here'
+      replace: 'wordpressuser'
+  - name: Config password
+    replace:
+      path: /var/www/html/wp-config.php
+      regexp: 'password_here'
+      replace: 'wordpresspassword'
+
+  - name: Config version PHP
+    yum:
+      name: '{{item}}'
+      state: present
+      disable_gpg_check: True
+    with_items:
+    - epel-release
+    - yum-utils
+    - http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+  - name: Config version PHP
+    shell: dnf module reset php -y
+  - name: Config version PHP
+    shell: dnf module enable php:remi-7.2 -y
+  - name: Config version PHP
+    yum:
+      name: '{{item}}'
+      state: present
+    with_items:
+    - php
+    - php-common
+    - php-opcache
+    - php-mcrypt
+    - php-cli
+    - php-gd
+    - php-curl
+    - php-mysqlnd
+  - name: Restart Apache
+    service:
+      name: httpd
+      state: restarted
