@@ -1,12 +1,11 @@
 apiVersion: v1 
 kind: ConfigMap 
 metadata: 
-  name: mysql-config 
+  name: airflow-mysql-config 
   labels: 
-    app: mysql
+    app: airflow-mysql
 data: 
   MYSQL_DATABASE: airflow
   MYSQL_USER: user_airflow
   MYSQL_PASSWORD: pwairflow
   MYSQL_ROOT_PASSWORD: pwairflow
-  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"

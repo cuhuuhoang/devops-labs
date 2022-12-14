@@ -1,0 +1,47 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: airflow-scheduler
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      app: airflow-scheduler
+  template: 
+    metadata: 
+      labels: 
+        app: airflow-scheduler
+    spec: 
+      containers: 
+        - name: airflow-scheduler
+          image: apache/airflow:2.4.2
+          imagePullPolicy: "IfNotPresent" 
+          command: 
+            - airflow 
+          args: 
+            - scheduler 
+          ports: 
+            - containerPort: 8080
+          envFrom: 
+            - configMapRef: 
+                name: airflow-core-config
+          volumeMounts: 
+            - mountPath: /opt/airflow/dags
+              name: airflowdags
+            - mountPath: /opt/airflow/logs
+              name: airflowlogs
+            - mountPath: /opt/airflow/plugins
+              name: airflowplugins
+      securityContext:
+        runAsUser: 50000
+        fsGroup: 50000
+      volumes: 
+        - name: airflowdags
+          persistentVolumeClaim: 
+            claimName: airflow-dags-pv-claim
+        - name: airflowlogs
+          persistentVolumeClaim:
+            claimName: airflow-logs-pv-claim
+        - name: airflowplugins
+          persistentVolumeClaim:
+            claimName: airflow-plugins-pv-claim

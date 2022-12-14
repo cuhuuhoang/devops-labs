@@ -1,0 +1,27 @@
+kind: PersistentVolume 
+apiVersion: v1 
+metadata: 
+  name: airflow-plugins-pv-volume 
+  labels: 
+    type: local 
+    app: airflow
+spec: 
+  storageClassName: manual 
+  capacity: 
+    storage: 3Gi 
+  accessModes: 
+    - ReadWriteMany 
+  hostPath: 
+    path: "/var/data/airflow/plugins" 
+--- 
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: airflow-plugins-pv-claim    
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests: 
+      storage: 3Gi

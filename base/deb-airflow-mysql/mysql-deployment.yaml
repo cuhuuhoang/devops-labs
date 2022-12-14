@@ -1,39 +1,30 @@
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
-  name: mysql 
+  name: airflow-mysql 
 spec: 
   replicas: 1 
   selector: 
     matchLabels: 
-      app: mysql 
+      app: airflow-mysql 
   template: 
     metadata: 
       labels: 
-        app: mysql 
+        app: airflow-mysql 
     spec: 
       containers: 
-        - name: mysql 
+        - name: airflow-mysql 
           image: mysql:8.0
           imagePullPolicy: "IfNotPresent" 
           ports: 
             - containerPort: 5432 
           envFrom: 
             - configMapRef: 
-                name: mysql-config
+                name: airflow-mysql-config
           volumeMounts: 
-            - mountPath: /var/lib/postgresql/data 
-              name: mysqldb
-          livenessProbe:
-            exec:
-              command:
-                - /usr/bin/mysqladmin
-                - ping
-                - -h
-                - localhost
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            - mountPath: /var/lib/mysql
+              name: airflowmysqldb
       volumes: 
-        - name: mysqldb 
+        - name: airflowmysqldb 
           persistentVolumeClaim: 
-            claimName: mysql-pv-claim
+            claimName: airflow-mysql-pv-claim

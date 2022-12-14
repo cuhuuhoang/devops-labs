@@ -1,0 +1,23 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: airflow-redis
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      app: airflow-redis
+  template: 
+    metadata: 
+      labels: 
+        app: airflow-redis
+    spec: 
+      containers: 
+        - name: airflow-redis
+          image: redis:latest
+          imagePullPolicy: "IfNotPresent" 
+          ports: 
+            - containerPort: 6379
+      securityContext:
+        runAsUser: 50000
+        fsGroup: 50000

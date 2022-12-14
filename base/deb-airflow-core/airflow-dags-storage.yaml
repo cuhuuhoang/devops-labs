@@ -1,10 +1,10 @@
 kind: PersistentVolume 
 apiVersion: v1 
 metadata: 
-  name: airflow-mysql-pv-volume 
+  name: airflow-dags-pv-volume 
   labels: 
     type: local 
-    app: airflow-mysql
+    app: airflow
 spec: 
   storageClassName: manual 
   capacity: 
@@ -12,18 +12,16 @@ spec:
   accessModes: 
     - ReadWriteMany 
   hostPath: 
-    path: "/opt/data" 
+    path: "/var/data/airflow/dags"
 --- 
 kind: PersistentVolumeClaim 
 apiVersion: v1 
 metadata: 
-  name: airflow-mysql-pv-claim 
-  labels: 
-    app: airflow-mysql 
+  name: airflow-dags-pv-claim
 spec: 
   storageClassName: manual 
   accessModes: 
     - ReadWriteMany 
   resources: 
     requests: 
-      storage: 5Gi 
+      storage: 5Gi

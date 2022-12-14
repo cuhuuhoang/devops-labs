@@ -1,12 +1,12 @@
 apiVersion: v1 
 kind: Service 
 metadata: 
-  name: airflow-mysql 
+  name: airflow-redis
   labels: 
-    app: airflow-mysql 
+    app: airflow-redis
 spec: 
   type: NodePort 
   ports: 
-    - port: 3306 
+    - port: 6379
   selector: 
-    app: airflow-mysql 
+    app: airflow-redis
