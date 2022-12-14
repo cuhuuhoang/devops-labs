@@ -7,6 +7,6 @@ chmod 644 ~/.ssh/authorized_keys
 
 sudo systemctl restart sshd
 
-for i in {1..3}; do
-	ssh -o StrictHostKeyChecking=no "a$i.vt" uname -n
-done
+#for i in {1..3}; do
+#	ssh -o StrictHostKeyChecking=no "a$i.vt" uname -n
+#done
