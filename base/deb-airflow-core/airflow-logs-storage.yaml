@@ -1,27 +1,11 @@
-kind: PersistentVolume 
-apiVersion: v1 
-metadata: 
-  name: airflow-logs-pv-volume 
-  labels: 
-    type: local 
-    app: airflow
-spec: 
-  storageClassName: manual 
-  capacity: 
-    storage: 2Gi 
-  accessModes: 
-    - ReadWriteMany 
-  hostPath: 
-    path: "/var/data/airflow/logs"
----
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: airflow-logs-pv-claim    
 spec:
-  storageClassName: manual
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   resources:
-    requests: 
+    requests:
       storage: 2Gi
+  storageClassName: rook-cephfs
