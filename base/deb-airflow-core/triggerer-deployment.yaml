@@ -19,7 +19,6 @@ spec:
           resources:
             requests:
               memory: "500Mi"
-              cpu: "250m"
           command: 
             - airflow 
           args: 

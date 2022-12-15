@@ -19,7 +19,6 @@ spec:
           resources:
             requests:
               memory: "2048Mi"
-              cpu: "500m"
           ports: 
             - containerPort: 5432 
           envFrom: 
