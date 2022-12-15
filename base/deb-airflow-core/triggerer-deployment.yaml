@@ -16,6 +16,10 @@ spec:
         - name: airflow-triggerer
           image: apache/airflow:2.4.2
           imagePullPolicy: "IfNotPresent" 
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
           command: 
             - airflow 
           args: 

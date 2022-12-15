@@ -9,4 +9,4 @@ echo "#https://rook.io/docs/rook/v1.10/Storage-Configuration/Shared-Filesystem-C
 echo "kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash"
 echo "ceph status"
 echo
-echo "kubectl create -f storageclass.yaml"
+echo "kubectl create -f base/deb-ceph-init/storageclass.yaml"

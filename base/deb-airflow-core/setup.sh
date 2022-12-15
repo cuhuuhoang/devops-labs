@@ -27,3 +27,6 @@ done
 sleep 10
 echo "====="
 kubectl -n airflow get all
+sleep 3m
+pod=$(kubectl -n airflow get pods --no-headers -o custom-columns=":metadata.name" --selector app=airflow-scheduler)
+ls dags | while read file; do kubectl -n airflow cp dags/"$file" "$pod":/opt/airflow/dags/"$file"; done

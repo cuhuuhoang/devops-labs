@@ -16,6 +16,10 @@ spec:
         - name: airflow-worker1
           image: apache/airflow:2.4.2
           imagePullPolicy: "IfNotPresent" 
+          resources:
+            requests:
+              memory: "2048Mi"
+              cpu: "500m"
           command: 
             - airflow 
           args: 

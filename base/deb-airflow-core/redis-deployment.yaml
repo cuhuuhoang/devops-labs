@@ -16,6 +16,10 @@ spec:
         - name: airflow-redis
           image: redis:latest
           imagePullPolicy: "IfNotPresent" 
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
           ports: 
             - containerPort: 6379
       securityContext:

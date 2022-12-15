@@ -25,8 +25,7 @@ kubectl apply -f mysql-service.yaml -n airflow
 
 echo "some manual init"
 #https://www.clearpeaks.com/deploying-apache-airflow-on-a-kubernetes-cluster/
-
-echo "kubectl -n airflow exec -i $(kubectl -n airflow get pods --no-headers -o custom-columns=':metadata.name' --selector app=airflow-mysql) -- /usr/bin/mysql -u root -ppwairflow airflow < airflow_init.sql"
+echo "kubectl -n airflow exec -i deploy/airflow-mysql -- /usr/bin/mysql -u root -ppwairflow airflow < base/deb-airflow-mysql/airflow_init.sql"
 
 echo "confirm"
 echo "kubectl -n airflow exec -i deploy/airflow-mysql -- /usr/bin/mysql -u root -ppwairflow airflow -e 'show tables' | head"
