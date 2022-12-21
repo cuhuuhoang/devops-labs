@@ -1,13 +1,11 @@
 kind: PersistentVolumeClaim 
 apiVersion: v1 
 metadata: 
-  name: airflow-mysql-pv-claim 
-  labels: 
-    app: airflow-mysql 
+  name: airflow-redis-pv-claim
 spec: 
   accessModes:
   - ReadWriteMany
   resources:
     requests:
-      storage: 256Mi
+      storage: 5Gi
   storageClassName: rook-cephfs

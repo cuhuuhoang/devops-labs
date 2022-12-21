@@ -1,0 +1,33 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: registry-init
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      app: registry-init
+  template: 
+    metadata: 
+      labels: 
+        app: registry-init
+    spec: 
+      containers: 
+        - name: registry-init
+          image: alpine:3.14
+          imagePullPolicy: "IfNotPresent" 
+          resources:
+            requests:
+              memory: "128Mi"
+          command: 
+            - /bin/sh
+          args:
+            - -c
+            - "while true; do sleep 1000; done"
+          volumeMounts: 
+            - mountPath: /certs
+              name: registrycerts
+      volumes: 
+        - name: registrycerts
+          persistentVolumeClaim: 
+            claimName: registry-certs-pv-claim

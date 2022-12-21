@@ -1,11 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: airflow-plugins-pv-claim
+  name: registry-certs-pv-claim
 spec:
   accessModes:
   - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
   storageClassName: rook-cephfs

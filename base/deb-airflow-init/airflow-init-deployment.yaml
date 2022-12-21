@@ -1,39 +1,29 @@
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
-  name: airflow-worker1
+  name: airflow-init
 spec: 
   replicas: 1 
   selector: 
     matchLabels: 
-      app: airflow-worker1
+      app: airflow-init
   template: 
     metadata: 
       labels: 
-        app: airflow-worker1
+        app: airflow-init
     spec: 
       containers: 
-        - name: airflow-worker1
-          image: apache/airflow:2.4.2
+        - name: airflow-init
+          image: alpine:3.14
           imagePullPolicy: "IfNotPresent" 
           resources:
             requests:
-              memory: "2048Mi"
-            limits:
-              memory: "3072Mi"
+              memory: "128Mi"
           command: 
-            - airflow 
-          args: 
-            - celery
-            - worker
-          ports: 
-            - containerPort: 8080
-          envFrom: 
-            - configMapRef: 
-                name: airflow-core-config
-          env:
-            - name: DUMB_INIT_SETSID
-              value: "0"
+            - /bin/sh
+          args:
+            - -c
+            - "while true; do sleep 1000; done"
           volumeMounts: 
             - mountPath: /opt/airflow/dags
               name: airflowdags
@@ -43,8 +33,6 @@ spec:
               name: airflowplugins
             - mountPath: /opt/airflow/data
               name: airflowdata
-      securityContext:
-        runAsUser: 50000
       volumes: 
         - name: airflowdags
           persistentVolumeClaim: 

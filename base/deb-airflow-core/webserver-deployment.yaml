@@ -14,15 +14,15 @@ spec:
     spec: 
       containers: 
         - name: airflow-webserver
-          image: apache/airflow:2.4.2
-          imagePullPolicy: "IfNotPresent" 
+          image: a1.vt:31320/airflow:1.0.0
+          imagePullPolicy: "Always" 
           resources:
             requests:
               memory: "1024Mi"
             limits:
               memory: "1533Mi"
           command: 
-            - airflow 
+            - /entrypoint
           args: 
             - webserver 
           ports: 
@@ -30,6 +30,8 @@ spec:
           envFrom: 
             - configMapRef: 
                 name: airflow-core-config
+            - configMapRef:
+                name: airflow-init-config
           volumeMounts: 
             - mountPath: /opt/airflow/dags
               name: airflowdags

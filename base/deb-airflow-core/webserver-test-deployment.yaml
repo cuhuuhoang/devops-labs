@@ -1,39 +1,38 @@
 apiVersion: apps/v1 
 kind: Deployment 
 metadata: 
-  name: airflow-worker1
+  name: airflow-webserver
 spec: 
   replicas: 1 
   selector: 
     matchLabels: 
-      app: airflow-worker1
+      app: airflow-webserver
   template: 
     metadata: 
       labels: 
-        app: airflow-worker1
+        app: airflow-webserver
     spec: 
       containers: 
-        - name: airflow-worker1
-          image: apache/airflow:2.4.2
-          imagePullPolicy: "IfNotPresent" 
+        - name: airflow-webserver
+          image: airflow:1.0.0
+          imagePullPolicy: "Never" 
           resources:
             requests:
-              memory: "2048Mi"
+              memory: "1024Mi"
             limits:
-              memory: "3072Mi"
+              memory: "1533Mi"
           command: 
-            - airflow 
-          args: 
-            - celery
-            - worker
+            - /bin/sh
+          args:
+            - -c
+            - "while true; do sleep 1000; done"
           ports: 
             - containerPort: 8080
           envFrom: 
             - configMapRef: 
                 name: airflow-core-config
-          env:
-            - name: DUMB_INIT_SETSID
-              value: "0"
+            - configMapRef:
+                name: airflow-init-config
           volumeMounts: 
             - mountPath: /opt/airflow/dags
               name: airflowdags
@@ -41,8 +40,6 @@ spec:
               name: airflowlogs
             - mountPath: /opt/airflow/plugins
               name: airflowplugins
-            - mountPath: /opt/airflow/data
-              name: airflowdata
       securityContext:
         runAsUser: 50000
       volumes: 
@@ -55,6 +52,3 @@ spec:
         - name: airflowplugins
           persistentVolumeClaim:
             claimName: airflow-plugins-pv-claim
-        - name: airflowdata
-          persistentVolumeClaim:
-            claimName: airflow-data-pv-claim

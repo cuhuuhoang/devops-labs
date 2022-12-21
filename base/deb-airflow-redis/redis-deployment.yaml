@@ -14,13 +14,16 @@ spec:
     spec: 
       containers: 
         - name: airflow-redis
-          image: redis:latest
+          image: bitnami/redis:latest
           imagePullPolicy: "IfNotPresent" 
           resources:
             requests:
               memory: "256Mi"
             limits:
               memory: "512Mi"
+          envFrom: 
+            - configMapRef: 
+                name: airflow-redis-config
           ports: 
             - containerPort: 6379
           volumeMounts:

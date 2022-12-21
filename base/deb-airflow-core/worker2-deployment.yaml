@@ -43,6 +43,8 @@ spec:
               name: airflowlogs
             - mountPath: /opt/airflow/plugins
               name: airflowplugins
+            - mountPath: /opt/airflow/data
+              name: airflowdata
       securityContext:
         runAsUser: 50000
       volumes: 
@@ -55,3 +57,6 @@ spec:
         - name: airflowplugins
           persistentVolumeClaim:
             claimName: airflow-plugins-pv-claim
+        - name: airflowdata
+          persistentVolumeClaim:
+            claimName: airflow-data-pv-claim

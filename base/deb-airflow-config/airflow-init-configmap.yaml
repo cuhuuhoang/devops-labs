@@ -1,0 +1,9 @@
+apiVersion: v1 
+kind: ConfigMap 
+metadata: 
+  name: airflow-init-config 
+data: 
+  _AIRFLOW_DB_UPGRADE: 'true'
+  _AIRFLOW_WWW_USER_CREATE: 'true'
+  _AIRFLOW_WWW_USER_USERNAME: admin
+  _AIRFLOW_WWW_USER_PASSWORD: airflow1

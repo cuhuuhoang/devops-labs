@@ -10,6 +10,7 @@ spec:
   ports:
   - name: dashboard
     port: 7000
+    nodePort: 31319
     protocol: TCP
     targetPort: 7000
   selector:

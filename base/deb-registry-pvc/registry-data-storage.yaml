@@ -1,8 +1,8 @@
-kind: PersistentVolumeClaim 
-apiVersion: v1 
-metadata: 
-  name: airflow-data-pv-claim
-spec: 
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: registry-data-pv-claim
+spec:
   accessModes:
   - ReadWriteMany
   resources:

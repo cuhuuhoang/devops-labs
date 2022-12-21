@@ -7,5 +7,7 @@ spec:
     app: airflow-flower
   ports:
     - port: 5555
+      nodePort: 31321
+      protocol: TCP
       targetPort: 5555
   type: LoadBalancer

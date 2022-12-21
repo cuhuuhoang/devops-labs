@@ -16,9 +16,7 @@ kubectl create -f "$dir"/crds.yaml -f "$dir"/common.yaml -f "$dir"/operator.yaml
 echo "wait until ok"
 echo "kubectl -n rook-ceph get pod"
 
-echo "kubectl create -f base/deb-ceph-rook/$dir/cluster-test.yaml"
-echo "kubectl create -f base/deb-ceph-rook/$dir/toolbox.yaml"
-echo "kubectl create -f base/deb-ceph-rook/dashboard-external-https.yaml"
+echo "kubectl create -f base/deb-ceph-rook/$dir/cluster-test.yaml -f base/deb-ceph-rook/$dir/toolbox.yaml -f base/deb-ceph-rook/dashboard-external-https.yaml"
 
 echo "Wait again"
 echo "kubectl -n rook-ceph get pod"
