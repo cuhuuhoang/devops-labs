@@ -18,9 +18,15 @@ spec:
           imagePullPolicy: "IfNotPresent" 
           resources:
             requests:
-              memory: "2048Mi"
+              memory: "256Mi"
+            limits:
+              memory: "512Mi"
           ports: 
             - containerPort: 6379
-      securityContext:
-        runAsUser: 50000
-        fsGroup: 50000
+          volumeMounts:
+            - mountPath: /data
+              name: airflowredisdata
+      volumes: 
+        - name: airflowredisdata
+          persistentVolumeClaim: 
+            claimName: airflow-redis-pv-claim

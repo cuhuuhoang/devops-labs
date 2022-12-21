@@ -8,13 +8,6 @@ kubectl create namespace airflow --dry-run=client -o yaml | kubectl apply -f -
 echo "mysql-configmap.yaml"
 kubectl apply -f mysql-configmap.yaml -n airflow
 
-echo "mysql-storage.yaml"
-kubectl apply -f mysql-storage.yaml -n airflow
-
-echo "verify storage"
-kubectl get pv -n airflow
-kubectl get pvc -n airflow
-
 echo "mysql-deployment.yaml"
 kubectl apply -f mysql-deployment.yaml -n airflow
 

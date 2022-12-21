@@ -18,6 +18,8 @@ spec:
           imagePullPolicy: "IfNotPresent" 
           resources:
             requests:
+              memory: "512Mi"
+            limits:
               memory: "1024Mi"
           command: 
             - airflow 
@@ -37,7 +39,6 @@ spec:
               name: airflowplugins
       securityContext:
         runAsUser: 50000
-        fsGroup: 50000
       volumes: 
         - name: airflowdags
           persistentVolumeClaim: 

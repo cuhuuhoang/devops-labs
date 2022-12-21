@@ -19,6 +19,8 @@ spec:
           resources:
             requests:
               memory: "2048Mi"
+            limits:
+              memory: "3072Mi"
           command: 
             - airflow 
           args: 
@@ -41,7 +43,6 @@ spec:
               name: airflowplugins
       securityContext:
         runAsUser: 50000
-        fsGroup: 50000
       volumes: 
         - name: airflowdags
           persistentVolumeClaim: 

@@ -1,0 +1,37 @@
+kind: PersistentVolume 
+apiVersion: v1 
+metadata: 
+  name: airflow-mysql-pv-volume 
+  labels: 
+    type: local 
+    app: airflow-mysql
+spec: 
+  storageClassName: manual 
+  capacity: 
+    storage: 2Gi 
+  accessModes: 
+    - ReadWriteMany 
+  hostPath: 
+    path: "/opt/data/mysql"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - a3.vt 
+--- 
+kind: PersistentVolumeClaim 
+apiVersion: v1 
+metadata: 
+  name: airflow-mysql-pv-claim 
+  labels: 
+    app: airflow-mysql 
+spec: 
+  storageClassName: manual 
+  accessModes: 
+    - ReadWriteMany 
+  resources: 
+    requests: 
+      storage: 2Gi 

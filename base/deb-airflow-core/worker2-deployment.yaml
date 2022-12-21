@@ -1,0 +1,57 @@
+apiVersion: apps/v1 
+kind: Deployment 
+metadata: 
+  name: airflow-worker2
+spec: 
+  replicas: 1 
+  selector: 
+    matchLabels: 
+      app: airflow-worker2
+  template: 
+    metadata: 
+      labels: 
+        app: airflow-worker2
+    spec: 
+      containers: 
+        - name: airflow-worker2
+          image: apache/airflow:2.4.2
+          imagePullPolicy: "IfNotPresent" 
+          resources:
+            requests:
+              memory: "2048Mi"
+            limits:
+              memory: "3072Mi"
+          command: 
+            - airflow 
+          args: 
+            - celery
+            - worker
+            - -q
+            - high_cpu
+          ports: 
+            - containerPort: 8080
+          envFrom: 
+            - configMapRef: 
+                name: airflow-core-config
+          env:
+            - name: DUMB_INIT_SETSID
+              value: "0"
+          volumeMounts: 
+            - mountPath: /opt/airflow/dags
+              name: airflowdags
+            - mountPath: /opt/airflow/logs
+              name: airflowlogs
+            - mountPath: /opt/airflow/plugins
+              name: airflowplugins
+      securityContext:
+        runAsUser: 50000
+      volumes: 
+        - name: airflowdags
+          persistentVolumeClaim: 
+            claimName: airflow-dags-pv-claim
+        - name: airflowlogs
+          persistentVolumeClaim:
+            claimName: airflow-logs-pv-claim
+        - name: airflowplugins
+          persistentVolumeClaim:
+            claimName: airflow-plugins-pv-claim

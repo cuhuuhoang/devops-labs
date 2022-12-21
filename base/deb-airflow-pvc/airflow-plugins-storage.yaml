@@ -1,0 +1,32 @@
+kind: PersistentVolume 
+apiVersion: v1 
+metadata: 
+  name: airflow-plugins-pv-volume 
+spec: 
+  storageClassName: manual 
+  capacity: 
+    storage: 2Gi 
+  accessModes: 
+    - ReadWriteMany 
+  hostPath: 
+    path: "/opt/data/plugins"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - a2.vt 
+--- 
+kind: PersistentVolumeClaim 
+apiVersion: v1 
+metadata: 
+  name: airflow-plugins-pv-claim
+spec: 
+  storageClassName: manual 
+  accessModes: 
+    - ReadWriteMany 
+  resources: 
+    requests: 
+      storage: 2Gi 
