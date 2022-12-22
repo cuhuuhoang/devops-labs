@@ -5,5 +5,5 @@ metadata:
 data: 
   AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: mysql+mysqldb://user_airflow:pwairflow@airflow-mysql/airflow
   AIRFLOW__CELERY__RESULT_BACKEND: db+mysql://user_airflow:pwairflow@airflow-mysql/airflow
-  AIRFLOW__CELERY__BROKER_URL: redis://:@airflow-redis:6379/0
+  AIRFLOW__CELERY__BROKER_URL: redis://default:pwredis@airflow-redis:6379/0
   AIRFLOW__CORE__FERNET_KEY: ''

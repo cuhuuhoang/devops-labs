@@ -33,7 +33,7 @@ spec:
             - configMapRef:
                 name: airflow-init-config
           volumeMounts: 
-            - mountPath: /opt/airflow/dags
+            - mountPath: /opt/airflow/dags/pull
               name: airflowdags
             - mountPath: /opt/airflow/logs
               name: airflowlogs

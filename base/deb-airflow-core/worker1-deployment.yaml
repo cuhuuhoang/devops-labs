@@ -14,15 +14,15 @@ spec:
     spec: 
       containers: 
         - name: airflow-worker1
-          image: apache/airflow:2.4.2
-          imagePullPolicy: "IfNotPresent" 
+          image: a1.vt:31320/airflow:1.0.0
+          imagePullPolicy: "Always" 
           resources:
             requests:
               memory: "2048Mi"
             limits:
               memory: "3072Mi"
           command: 
-            - airflow 
+            - /entrypoint
           args: 
             - celery
             - worker
@@ -35,7 +35,7 @@ spec:
             - name: DUMB_INIT_SETSID
               value: "0"
           volumeMounts: 
-            - mountPath: /opt/airflow/dags
+            - mountPath: /opt/airflow/dags/pull
               name: airflowdags
             - mountPath: /opt/airflow/logs
               name: airflowlogs

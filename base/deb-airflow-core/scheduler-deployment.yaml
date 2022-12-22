@@ -14,15 +14,15 @@ spec:
     spec: 
       containers: 
         - name: airflow-scheduler
-          image: apache/airflow:2.4.2
-          imagePullPolicy: "IfNotPresent" 
+          image: a1.vt:31320/airflow:1.0.0
+          imagePullPolicy: "Always" 
           resources:
             requests:
               memory: "512Mi"
             limits:
               memory: "1024Mi"
           command: 
-            - airflow 
+            - /entrypoint
           args: 
             - scheduler 
           ports: 
@@ -31,7 +31,7 @@ spec:
             - configMapRef: 
                 name: airflow-core-config
           volumeMounts: 
-            - mountPath: /opt/airflow/dags
+            - mountPath: /opt/airflow/dags/pull
               name: airflowdags
             - mountPath: /opt/airflow/logs
               name: airflowlogs

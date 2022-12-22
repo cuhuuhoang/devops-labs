@@ -5,9 +5,6 @@ ENV AIRFLOW__CORE__LOAD_EXAMPLES='false'
 ENV AIRFLOW__API__AUTH_BACKENDS='airflow.api.auth.backend.basic_auth'
 ENV AIRFLOW__CORE__EXECUTOR=CeleryExecutor
 # default dag
-USER root
-ADD dags /opt/airflow/dags
-#USER root
+ADD --chown=airflow:root dags /opt/airflow/dags
 # switch user
 USER airflow
-#ADD --chown=airflow:root dags /opt/airflow/dags/default

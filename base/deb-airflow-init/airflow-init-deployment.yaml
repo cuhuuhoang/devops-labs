@@ -25,13 +25,13 @@ spec:
             - -c
             - "while true; do sleep 1000; done"
           volumeMounts: 
-            - mountPath: /opt/airflow/dags
+            - mountPath: /xx/dags
               name: airflowdags
-            - mountPath: /opt/airflow/logs
+            - mountPath: /xx/logs
               name: airflowlogs
-            - mountPath: /opt/airflow/plugins
+            - mountPath: /xx/plugins
               name: airflowplugins
-            - mountPath: /opt/airflow/data
+            - mountPath: /xx/data
               name: airflowdata
       volumes: 
         - name: airflowdags
