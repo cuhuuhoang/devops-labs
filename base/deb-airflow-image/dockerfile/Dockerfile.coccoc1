@@ -1,0 +1,21 @@
+FROM apache/airflow:2.5.0
+# default ENV
+ENV AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION='true'
+ENV AIRFLOW__CORE__LOAD_EXAMPLES='false'
+ENV AIRFLOW__API__AUTH_BACKENDS='airflow.api.auth.backend.basic_auth'
+ENV AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+# setup things
+USER root
+ENV TZ=Asia/Ho_Chi_Minh
+
+RUN apt-get update && \
+        DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --quiet \
+        unzip \
+        && apt-get clean all
+RUN mkdir -p /app
+COPY resources/jdk-15.0.1.zip /app
+#RUN unzip /app/jdk-15.0.1.zip -d / && rm /app/jdk-15.0.1.zip
+# default dag
+#ADD --chown=airflow:root dags /opt/airflow/dags
+# switch user
+USER airflow
